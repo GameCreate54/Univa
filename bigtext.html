@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>でか文字</title>
+<style>
+:root{--bg:#f6f4ef;--fg:#16140f;--bar:#e4e0d6;--line:#bdb7a8;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14130f;--fg:#f3efe4;--bar:#26241d;--line:#4a463a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#14130f;--fg:#f3efe4;--bar:#26241d;--line:#4a463a;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--fg);font-family:"Hiragino Sans","Noto Sans JP",sans-serif;-webkit-text-size-adjust:100%}
+body{display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+#stage{flex:1;display:flex;align-items:center;justify-content:center;padding:12px;overflow:hidden;text-align:center;cursor:pointer}
+#out{font-weight:900;line-height:1.15;word-break:break-all;white-space:pre-wrap;max-width:100%}
+#bar{display:flex;gap:8px;padding:10px;background:var(--bar);border-top:1px solid var(--line)}
+#bar.hide{display:none}
+textarea{flex:1;height:56px;resize:none;font:inherit;font-size:16px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--fg)}
+button{font:inherit;font-size:15px;padding:0 14px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--fg)}
+</style>
+</head>
+<body>
+<div id="stage" title="タップで入力欄を表示/非表示"><div id="out">こんにちは</div></div>
+<div id="bar">
+<textarea id="in" placeholder="ここに入力">こんにちは</textarea>
+<button id="theme">白黒</button>
+</div>
+<script>
+var out=document.getElementById('out'),inp=document.getElementById('in'),stage=document.getElementById('stage'),bar=document.getElementById('bar');
+function fit(){
+  var w=stage.clientWidth-24,h=stage.clientHeight-24,lo=10,hi=600;
+  while(lo<hi){var m=Math.ceil((lo+hi)/2);out.style.fontSize=m+'px';
+    if(out.scrollWidth<=w+1&&out.scrollHeight<=h)lo=m;else hi=m-1;}
+  out.style.fontSize=lo+'px';
+}
+function upd(){out.textContent=inp.value||'　';fit();}
+inp.addEventListener('input',upd);
+window.addEventListener('resize',fit);
+stage.addEventListener('click',function(){bar.classList.toggle('hide');fit();});
+document.getElementById('theme').addEventListener('click',function(){
+  var r=document.documentElement,d=getComputedStyle(r).colorScheme==='dark';
+  r.setAttribute('data-theme',d?'light':'dark');
+});
+upd();
+</script>
+</body>
+</html>
